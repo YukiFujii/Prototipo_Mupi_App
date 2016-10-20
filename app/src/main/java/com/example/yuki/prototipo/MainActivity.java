@@ -29,9 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase conn;
     private Question_Repository repositorioDeQuestoes;
     private Selected_Questions saveQuestions;
-
-    private ArrayList<Question> arrayQuestions;
-    private int index =0;
+    private Question question;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,104 +42,87 @@ public class MainActivity extends AppCompatActivity {
         btnSave = (Button) findViewById(R.id.btnSave);
         btnDiscart = (Button) findViewById(R.id.btnDiscart);
 
-
-        Bundle bundle = getIntent().getExtras();
-
-        if ((bundle != null) && (bundle.containsKey("INDEX")))
-            index = (int) bundle.getSerializable("INDEX");
-
-        Log.i("Index",""+index);
-
-        try
+        if(this.conexaoBD())
         {
+            //IMPROVISO!!!!
+            this.buscarQuestoesDeFora();
+
+            this.question = this.repositorioDeQuestoes.catchNextQuestion();
+
+            if(this.question==null)
+            {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+                dlg.setMessage("Todas questões foram visualizadas!");
+                dlg.setNeutralButton("OK", null);
+                dlg.show();
+            }
+            else
+                txtQuestion.setText(this.question.getQuestion());
+
+        }
+        else
+        {
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Erro ao conectar com banco!");
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        }
+
+    }
+
+    private boolean conexaoBD()
+    {
+        try {
 
             dataBase = new DataBase(this);
             conn = dataBase.getWritableDatabase();
 
             repositorioDeQuestoes = new Question_Repository(conn);
 
-            arrayQuestions = repositorioDeQuestoes.buscarQuestoes();
-
-            for (;;)
-            {
-                if (arrayQuestions.size() == 0)
-                {
-                    buscarQuestoesDeFora();
-                    arrayQuestions = repositorioDeQuestoes.buscarQuestoes();
-                }
-                else
-                    break;
-            }
-
-
-            txtQuestion.setText(arrayQuestions.get(this.index).getQuestion());
-
+            return true;
         }
-        catch (Exception ex) {
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Erro ao criar banco: " + ex.getMessage());
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
+        catch (Exception ex)
+        {
+            return false;
         }
 
     }
+
 
     private void saveQuestion()
     {
         saveQuestions = new Selected_Questions(conn);
 
-        Question aux = arrayQuestions.get(index);
-
-        saveQuestions.inserir(aux);
+        saveQuestions.inserir(this.question);
     }
 
     public void btnSave(View view)
     {
+        this.question.setFoiVisualizado(1);
 
-        if(!(index+1 == this.arrayQuestions.size()))
-        {
-            saveQuestion();
+        this.repositorioDeQuestoes.update(this.question);
 
-            this.index++;
+        this.saveQuestion();
 
-            ArrayList<Question> aux = saveQuestions.buscarQuestoesSelecionadas();
-            Log.i("Questões salvas",""+aux.size());
-
-            Intent it = new Intent(this, MainActivity.class);
-            it.putExtra("INDEX", this.index);
-            startActivityForResult(it, 0);
-            finish();
-        }
-        else
-        {
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Não existem mais questões no repositório");
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
-        }
-
+        this.chamarMainActivity();
     }
 
     public void btnDiscart(View view)
     {
-        this.index++;
+        this.question.setFoiVisualizado(1);
 
-        if(index < this.arrayQuestions.size())
-        {
-            Intent it = new Intent(this, MainActivity.class);
-            it.putExtra("INDEX", this.index);
-            startActivityForResult(it, 0);
-            finish();
-        }
-        else
-        {
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Não existem mais questões no repositório");
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
-        }
+        this.repositorioDeQuestoes.update(this.question);
 
+        this.chamarMainActivity();
     }
+
+    private void chamarMainActivity()
+    {
+        Intent it = new Intent(this, MainActivity.class);
+        startActivityForResult(it, 0);
+        finish();
+    }
+
 
     private void buscarQuestoesDeFora()
     {
@@ -155,14 +136,14 @@ public class MainActivity extends AppCompatActivity {
             Question q7 = new Question(7, "Questão 7.");
             Question q8 = new Question(8, "Questão 8.");
 
-            repositorioDeQuestoes.inserir(q1);
-            repositorioDeQuestoes.inserir(q2);
-            repositorioDeQuestoes.inserir(q3);
-            repositorioDeQuestoes.inserir(q4);
-            repositorioDeQuestoes.inserir(q5);
-            repositorioDeQuestoes.inserir(q6);
-            repositorioDeQuestoes.inserir(q7);
-            repositorioDeQuestoes.inserir(q8);
+            repositorioDeQuestoes.insert(q1);
+            repositorioDeQuestoes.insert(q2);
+            repositorioDeQuestoes.insert(q3);
+            repositorioDeQuestoes.insert(q4);
+            repositorioDeQuestoes.insert(q5);
+            repositorioDeQuestoes.insert(q6);
+            repositorioDeQuestoes.insert(q7);
+            repositorioDeQuestoes.insert(q8);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.yuki.prototipo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,7 +28,8 @@ public class Home extends AppCompatActivity {
 
     public void chamarEscolherQuestoes(View view)
     {
-        
+        Intent it = new Intent(this, MainActivity.class);
+        startActivityForResult(it, 0);
     }
 
 }
