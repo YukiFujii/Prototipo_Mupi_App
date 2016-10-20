@@ -6,8 +6,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ListView;
 
 public class SavedQuestions extends AppCompatActivity {
+
+    private ListView lstSavedQuestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,6 +18,9 @@ public class SavedQuestions extends AppCompatActivity {
         setContentView(R.layout.activity_saved_questions);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        lstSavedQuestions = (ListView)findViewById(R.id.lstSavedQuestions);
+
 
 
     }

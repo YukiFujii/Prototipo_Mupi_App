@@ -4,7 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DataBase extends SQLiteOpenHelper
+import java.io.Serializable;
+
+public class DataBase extends SQLiteOpenHelper implements Serializable
 {
     public DataBase (Context context)
     {

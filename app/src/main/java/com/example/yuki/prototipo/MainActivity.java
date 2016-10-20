@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         if(this.conexaoBD())
         {
             //IMPROVISO!!!!
+            repositorioDeQuestoes = new Question_Repository(conn);
             this.buscarQuestoesDeFora();
 
             this.question = this.repositorioDeQuestoes.catchNextQuestion();
@@ -75,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
             dataBase = new DataBase(this);
             conn = dataBase.getWritableDatabase();
-
-            repositorioDeQuestoes = new Question_Repository(conn);
 
             return true;
         }
