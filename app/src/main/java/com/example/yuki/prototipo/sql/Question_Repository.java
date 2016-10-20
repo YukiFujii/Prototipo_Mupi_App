@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.example.yuki.prototipo.Question;
@@ -30,7 +31,7 @@ public class Question_Repository {
 
         values.put("_id",question.getId());
         values.put("QUESTION",question.getQuestion());
-        values.put("FOI_VISUALIZADO",question.getQuestion());
+        values.put("FOI_VISUALIZADO",question.getFoiVisualizado());
 
         return values;
     }
@@ -59,15 +60,20 @@ public class Question_Repository {
 
         cursor.moveToFirst();
 
+        Log.i("Questoes no banco",""+cursor.getCount());
+
         if(cursor.getCount()>0)
         {
             do
             {
                 int foiVisualizado = cursor.getInt(2);
 
+                Log.i("Foi visualizado",""+foiVisualizado);
+
                 // se foiVisualizado igual a 0 significa que questão não foi visualizada
                 if(foiVisualizado==0)
                 {
+                    question = new Question();
                     question.setId(cursor.getInt(0));
                     question.setQuestion(cursor.getString(1));
                     question.setFoiVisualizado(cursor.getInt(2));

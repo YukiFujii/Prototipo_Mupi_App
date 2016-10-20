@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     public void chamarTelaInicial(View v)
     {
         if(flagAcesso) {
-            Intent it = new Intent(this, MainActivity.class);
+            Intent it = new Intent(this, Home.class);
             startActivityForResult(it, 0);
             finish();
         }

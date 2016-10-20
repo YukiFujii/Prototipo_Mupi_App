@@ -32,4 +32,10 @@ public class Home extends AppCompatActivity {
         startActivityForResult(it, 0);
     }
 
+    public void chamarVisualizarQuestoes(View view)
+    {
+        Intent it = new Intent(this, SavedQuestions.class);
+        startActivityForResult(it, 0);
+    }
+
 }

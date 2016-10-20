@@ -29,6 +29,10 @@
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SavedQuestions"
+            android:label="@string/title_activity_saved_questions"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

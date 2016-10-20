@@ -11,10 +11,10 @@ public class ScriptSQL {
         StringBuilder sqlBuilder = new StringBuilder();
 
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS QUESTIONS ( ");
-        sqlBuilder.append("_id                INTEGER");
-        sqlBuilder.append("PRIMARY KEY                      , ");
-        sqlBuilder.append("QUESTION              VARCHAR (500)");
-        sqlBuilder.append("FOI_VISUALIZADA             INTEGER");
+        sqlBuilder.append("_id                             INTEGER");
+        sqlBuilder.append("PRIMARY KEY                          , ");
+        sqlBuilder.append("QUESTION               VARCHAR (500) , ");
+        sqlBuilder.append("FOI_VISUALIZADO                 INTEGER");
         sqlBuilder.append(");");
 
         return sqlBuilder.toString();

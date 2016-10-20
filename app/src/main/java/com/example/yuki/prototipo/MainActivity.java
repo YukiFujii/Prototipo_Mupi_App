@@ -51,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
             if(this.question==null)
             {
-                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-                dlg.setMessage("Todas questões foram visualizadas!");
-                dlg.setNeutralButton("OK", null);
-                dlg.show();
+                txtQuestion.setText("Todas questões foram visualizadas!");
+                btnDiscart.setEnabled(false);
+                btnSave.setEnabled(false);
             }
             else
                 txtQuestion.setText(this.question.getQuestion());
