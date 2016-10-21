@@ -14,18 +14,27 @@ import android.widget.TextView;
 import com.example.yuki.prototipo.sql.DataBase;
 import com.example.yuki.prototipo.sql.FacadeSQL;
 import com.example.yuki.prototipo.sql.Question_Repository;
+import com.example.yuki.prototipo.sql.Selected_Questions;
+
+import org.json.JSONObject;
+import org.json.JSONStringer;
 
 public class ShowQuestion extends AppCompatActivity {
 
     private Button btnOk;
     private Button btnDelete;
     private TextView txtShowQuestion;
+
+    private DataBase dataBase;
+    private SQLiteDatabase conn;
+    private Question_Repository repositorioDeQuestoes;
+    private Selected_Questions saveQuestions;
     private Question question;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_question);
+        setContentView( R.layout.activity_show_question);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,6 +51,22 @@ public class ShowQuestion extends AppCompatActivity {
 
     }
 
+    private boolean conexaoBD()
+    {
+        try {
+
+            dataBase = new DataBase(this);
+            conn = dataBase.getWritableDatabase();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+
+    }
+
     public void buttonOk(View view)
     {
         finish();
@@ -50,23 +75,23 @@ public class ShowQuestion extends AppCompatActivity {
     public void buttonDelete(View view)
     {
 
-        boolean error = false;
+        if(this.conexaoBD())
+        {
+            repositorioDeQuestoes = new Question_Repository(conn);
+            repositorioDeQuestoes.insert(this,this.question);
 
-        if(!(FacadeSQL.insertQuestionRepository(this,this.question)))
-            error = true;
+            saveQuestions = new Selected_Questions(conn);
+            saveQuestions.delete(this.question.getId());
 
-        if(!(FacadeSQL.deleteSelectedQuestions(this,this.question)))
-            error = true;
-
-        if(error)
+            finish();
+        }
+        else
         {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Falha deletar questão.");
+            dlg.setMessage("Falha ao deletar questão.");
             dlg.setNeutralButton("OK", null);
             dlg.show();
         }
-        else
-            finish();
 
     }
 

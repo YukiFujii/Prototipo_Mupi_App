@@ -26,7 +26,6 @@ public class ScriptSQL {
 
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS SELECTED_QUESTIONS ( ");
         sqlBuilder.append("_id                         INTEGER");
-        //sqlBuilder.append("PRIMARY KEY AUTO      INCREMENT, ");
         sqlBuilder.append("PRIMARY KEY                      , ");
         sqlBuilder.append("QUESTION              VARCHAR (500)");
         sqlBuilder.append(");");

@@ -35,30 +35,6 @@ public final class FacadeSQL {
             return false;
     }
 
-    public static boolean insertQuestionRepository(Context context, Question question)
-    {
-        if(conexaoBD(context))
-        {
-            repositorioDeQuestoes = new Question_Repository(conn);
-            repositorioDeQuestoes.insert(context,question);
-            return true;
-        }
-        else
-            return false;
-    }
-
-    public static boolean deleteSelectedQuestions(Context context, Question question)
-    {
-        if(conexaoBD(context))
-        {
-            saveQuestions = new Selected_Questions(conn);
-            saveQuestions.delete(context,question.getId());
-            return true;
-        }
-        else
-            return false;
-    }
-
     private static boolean conexaoBD(Context context)
     {
         try {

@@ -45,6 +45,11 @@ public class Question_Repository {
             conn.insertOrThrow("QUESTIONS", null, preencheContentValues(question));
     }
 
+    public void insert(Question question)
+    {
+            conn.insertOrThrow("QUESTIONS", null, preencheContentValues(question));
+    }
+
     public void update(Question question)
     {
         conn.update("QUESTIONS",preencheContentValues(question),"_id = ?",new String[]{question.getId()+""});
@@ -70,8 +75,6 @@ public class Question_Repository {
             do
             {
                 int foiVisualizado = cursor.getInt(2);
-
-                Log.i("Foi visualizado",""+foiVisualizado);
 
                 // se foiVisualizado igual a 0 significa que questão não foi visualizada
                 if(foiVisualizado==0)

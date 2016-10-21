@@ -43,7 +43,7 @@ public class Selected_Questions {
         conn.update("SELECTED_QUESTIONS",preencheContentValues(question),"_id = ?",new String[]{question.getId()+""});
     }
 
-    public void delete(Context context, int id)
+    public void delete(int id)
     {
         conn.delete("SELECTED_QUESTIONS","_id = ?",new String[]{""+id});
     }
