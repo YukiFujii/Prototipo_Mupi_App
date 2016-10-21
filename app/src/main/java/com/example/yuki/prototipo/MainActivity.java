@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Log.i("Abriu programa","true");
+
         txtQuestion = (TextView) findViewById(R.id.txtQuestion);
         btnSave = (Button) findViewById(R.id.btnSave);
         btnDiscart = (Button) findViewById(R.id.btnDiscart);
@@ -91,20 +93,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveQuestion()
     {
-        saveQuestions = new Selected_Questions(conn);
+        this.saveQuestions = new Selected_Questions(conn);
 
-        saveQuestions.inserir(this.question);
+        this.saveQuestions.insert(this.question);
+        this.repositorioDeQuestoes.delete(this.question.getId());
+
+        Log.i("Deletando questao do ID",""+question.getId());
     }
 
     public void btnSave(View view)
     {
         this.question.setFoiVisualizado(1);
 
+        Log.i("setVisualizado",""+question.getFoiVisualizado());
+
         this.repositorioDeQuestoes.update(this.question);
 
         this.saveQuestion();
-
-        this.repositorioDeQuestoes.delete(this.question.getId());
 
         this.chamarMainActivity();
     }
@@ -122,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent it = new Intent(this, MainActivity.class);
         startActivityForResult(it, 0);
+        Log.i("Fechando programa","true");
         finish();
     }
 
@@ -137,14 +143,14 @@ public class MainActivity extends AppCompatActivity {
             Question q7 = new Question(7, "Teste 7.");
             Question q8 = new Question(8, "Teste 8.");
 
-            repositorioDeQuestoes.insert(q1);
-            repositorioDeQuestoes.insert(q2);
-            repositorioDeQuestoes.insert(q3);
-            repositorioDeQuestoes.insert(q4);
-            repositorioDeQuestoes.insert(q5);
-            repositorioDeQuestoes.insert(q6);
-            repositorioDeQuestoes.insert(q7);
-            repositorioDeQuestoes.insert(q8);
+            repositorioDeQuestoes.insert(this,q1);
+            repositorioDeQuestoes.insert(this,q2);
+            repositorioDeQuestoes.insert(this,q3);
+            repositorioDeQuestoes.insert(this,q4);
+            repositorioDeQuestoes.insert(this,q5);
+            repositorioDeQuestoes.insert(this,q6);
+            repositorioDeQuestoes.insert(this,q7);
+            repositorioDeQuestoes.insert(this,q8);
     }
 
 }

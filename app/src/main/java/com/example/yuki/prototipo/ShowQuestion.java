@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.yuki.prototipo.sql.DataBase;
+import com.example.yuki.prototipo.sql.FacadeSQL;
 import com.example.yuki.prototipo.sql.Question_Repository;
 
 public class ShowQuestion extends AppCompatActivity {
@@ -20,10 +21,6 @@ public class ShowQuestion extends AppCompatActivity {
     private Button btnDelete;
     private TextView txtShowQuestion;
     private Question question;
-
-    private DataBase dataBase;
-    private SQLiteDatabase conn;
-    private Question_Repository repositorioDeQuestoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,34 +49,24 @@ public class ShowQuestion extends AppCompatActivity {
 
     public void buttonDelete(View view)
     {
-        if(this.conexaoBD())
-        {
-            repositorioDeQuestoes = new Question_Repository(conn);
-            repositorioDeQuestoes.delete(this.question.getId());
-            finish();
-        }
-        else
+
+        boolean error = false;
+
+        if(!(FacadeSQL.insertQuestionRepository(this,this.question)))
+            error = true;
+
+        if(!(FacadeSQL.deleteSelectedQuestions(this,this.question)))
+            error = true;
+
+        if(error)
         {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Não foi possível deletar questão.");
+            dlg.setMessage("Falha deletar questão.");
             dlg.setNeutralButton("OK", null);
             dlg.show();
         }
-    }
-
-    private boolean conexaoBD()
-    {
-        try {
-
-            dataBase = new DataBase(this);
-            conn = dataBase.getWritableDatabase();
-
-            return true;
-        }
-        catch (Exception ex)
-        {
-            return false;
-        }
+        else
+            finish();
 
     }
 

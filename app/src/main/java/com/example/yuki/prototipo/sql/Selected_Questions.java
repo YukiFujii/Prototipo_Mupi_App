@@ -33,19 +33,19 @@ public class Selected_Questions {
         return values;
     }
 
-    public void inserir(Question question)
+    public void insert(Question question)
     {
         conn.insertOrThrow("SELECTED_QUESTIONS", null, preencheContentValues(question));
     }
 
-    public void alterar(Question question)
+    public void update(Question question)
     {
         conn.update("SELECTED_QUESTIONS",preencheContentValues(question),"_id = ?",new String[]{question.getId()+""});
     }
 
-    public void excluir(long id)
+    public void delete(Context context, int id)
     {
-        conn.delete("SELECTED_QUESTIONS","_id = ?",new String[]{id+""});
+        conn.delete("SELECTED_QUESTIONS","_id = ?",new String[]{""+id});
     }
 
     public ArrayAdapter<Question> buscarQuestoesSelecionadas (Context context)
@@ -72,5 +72,29 @@ public class Selected_Questions {
         }
 
         return arrayQuestions;
+    }
+
+    public boolean hasQuestion(Question question)
+    {
+        Cursor cursor = conn.query("SELECTED_QUESTIONS",null,null,null,null,null,null);
+
+        cursor.moveToFirst();
+
+        if(cursor.getCount()>0)
+        {
+            do
+            {
+                int id = cursor.getInt(0);
+
+                if(id==question.getId())
+                    return true;
+
+            }while (cursor.moveToNext());
+
+            return false;
+        }
+
+        return false;
+
     }
 }

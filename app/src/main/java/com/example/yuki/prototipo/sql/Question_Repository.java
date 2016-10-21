@@ -36,9 +36,12 @@ public class Question_Repository {
         return values;
     }
 
-    public void insert(Question question)
+    public void insert(Context context, Question question)
     {
-        if(!(this.hasQuestion(question)))
+        Log.i("Inserindo questao","true");
+        Log.i("Tem questao",""+this.hasQuestion(question));
+
+        if(!(FacadeSQL.hasQuestion(context,question)))
             conn.insertOrThrow("QUESTIONS", null, preencheContentValues(question));
     }
 
@@ -47,9 +50,9 @@ public class Question_Repository {
         conn.update("QUESTIONS",preencheContentValues(question),"_id = ?",new String[]{question.getId()+""});
     }
 
-    public void delete(long id)
+    public void delete(int id)
     {
-        conn.delete("QUESTIONS","_id = ?",new String[]{id+""});
+        conn.delete("QUESTIONS","_id = ?",new String[]{""+id});
     }
 
     public Question catchNextQuestion ()
