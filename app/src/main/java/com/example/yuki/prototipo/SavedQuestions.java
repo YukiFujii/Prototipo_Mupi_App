@@ -70,6 +70,12 @@ public class SavedQuestions extends AppCompatActivity implements AdapterView.OnI
 
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        adpQuestions = selectedQuestions.buscarQuestoesSelecionadas(this);
+        lstSavedQuestions.setAdapter(adpQuestions);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
     {
