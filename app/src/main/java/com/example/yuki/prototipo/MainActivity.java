@@ -44,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
         if(this.conexaoBD())
         {
-            //IMPROVISO!!!!
             repositorioDeQuestoes = new Question_Repository(conn);
+
+            //IMPROVISO!!!!
             this.buscarQuestoesDeFora();
 
             this.question = this.repositorioDeQuestoes.catchNextQuestion();
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 txtQuestion.setText("Todas questões foram visualizadas!");
                 btnDiscart.setEnabled(false);
                 btnSave.setEnabled(false);
+                this.repositorioDeQuestoes.updateFoiVisualizado();
             }
             else
                 txtQuestion.setText(this.question.getQuestion());
@@ -102,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
 
         this.saveQuestion();
 
+        this.repositorioDeQuestoes.delete(this.question.getId());
+
         this.chamarMainActivity();
     }
 
@@ -121,18 +125,17 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-
     private void buscarQuestoesDeFora()
     {
 
-            Question q1 = new Question(1, "Questão 1.");
-            Question q2 = new Question(2, "Questão 2.");
-            Question q3 = new Question(3, "Questão 3.");
-            Question q4 = new Question(4, "Questão 4.");
-            Question q5 = new Question(5, "Questão 5.");
-            Question q6 = new Question(6, "Questão 6.");
-            Question q7 = new Question(7, "Questão 7.");
-            Question q8 = new Question(8, "Questão 8.");
+            Question q1 = new Question(1, "Teste 1.");
+            Question q2 = new Question(2, "Teste 2.");
+            Question q3 = new Question(3, "Teste 3.");
+            Question q4 = new Question(4, "Teste 4.");
+            Question q5 = new Question(5, "Teste 5.");
+            Question q6 = new Question(6, "Teste 6.");
+            Question q7 = new Question(7, "Teste 7.");
+            Question q8 = new Question(8, "Teste 8.");
 
             repositorioDeQuestoes.insert(q1);
             repositorioDeQuestoes.insert(q2);

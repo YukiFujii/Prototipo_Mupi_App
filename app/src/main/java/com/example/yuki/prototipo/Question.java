@@ -1,10 +1,12 @@
 package com.example.yuki.prototipo;
 
+import java.io.Serializable;
+
 /**
  * Created by yuki on 14/10/16.
  */
 
-public class Question
+public class Question implements Serializable
 {
     private int id;
     private  String question;
@@ -42,4 +44,14 @@ public class Question
     public void setFoiVisualizado(int foiVisualizado) {
         this.foiVisualizado = foiVisualizado;
     }
+
+    public String toString()
+    {
+        String ret="Questão ";
+
+        ret = ret+this.getId();
+
+        return ret;
+    }
+
 }

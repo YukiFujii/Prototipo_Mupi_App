@@ -17,4 +17,5 @@
     <string name="project_name">Prototipo</string>
     <string name="title_activity_home">Home</string>
     <string name="title_activity_saved_questions">SavedQuestions</string>
+    <string name="title_activity_show_question">ShowQuestion</string>
 </resources>

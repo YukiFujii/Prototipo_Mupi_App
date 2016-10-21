@@ -33,6 +33,10 @@
         <activity
             android:name=".SavedQuestions"
             android:label="@string/title_activity_saved_questions"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ShowQuestion"
+            android:label="@string/title_activity_show_question"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

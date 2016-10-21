@@ -86,6 +86,31 @@ public class Question_Repository {
         return question;
     }
 
+
+    public void updateFoiVisualizado ()
+    {
+        Question question;
+
+        Cursor cursor = conn.query("QUESTIONS",null,null,null,null,null,null);
+
+        cursor.moveToFirst();
+
+        if(cursor.getCount()>0)
+        {
+            do
+            {
+                    question = new Question();
+                    question.setId(cursor.getInt(0));
+                    question.setQuestion(cursor.getString(1));;
+
+                    question.setFoiVisualizado(0);
+
+                    this.update(question);
+
+            }while (cursor.moveToNext());
+        }
+    }
+
     public boolean hasQuestion(Question question)
     {
         Cursor cursor = conn.query("QUESTIONS",null,null,null,null,null,null);

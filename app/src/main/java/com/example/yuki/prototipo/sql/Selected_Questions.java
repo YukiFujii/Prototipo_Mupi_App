@@ -1,8 +1,10 @@
 package com.example.yuki.prototipo.sql;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.ArrayAdapter;
 
 import com.example.yuki.prototipo.Question;
 
@@ -46,9 +48,9 @@ public class Selected_Questions {
         conn.delete("SELECTED_QUESTIONS","_id = ?",new String[]{id+""});
     }
 
-    public ArrayList<Question> buscarQuestoesSelecionadas ()
+    public ArrayAdapter<Question> buscarQuestoesSelecionadas (Context context)
     {
-        ArrayList<Question> arrayQuestoes = new ArrayList<Question>();
+        ArrayAdapter<Question> arrayQuestions = new ArrayAdapter<Question>(context,android.R.layout.simple_list_item_1);
 
         Cursor cursor = conn.query("SELECTED_QUESTIONS",null,null,null,null,null,null);
 
@@ -62,12 +64,13 @@ public class Selected_Questions {
 
                 question.setId(cursor.getInt(0));
                 question.setQuestion(cursor.getString(1));
+                question.setFoiVisualizado(1);
 
-                arrayQuestoes.add(question);
+                arrayQuestions.add(question);
 
             }while (cursor.moveToNext());
         }
 
-        return arrayQuestoes;
+        return arrayQuestions;
     }
 }
