@@ -10,11 +10,13 @@ public class ScriptSQL {
     {
         StringBuilder sqlBuilder = new StringBuilder();
 
-        sqlBuilder.append("CREATE TABLE IF NOT EXISTS QUESTIONS ( ");
-        sqlBuilder.append("_id                             INTEGER");
-        sqlBuilder.append("PRIMARY KEY                          , ");
-        sqlBuilder.append("QUESTION               VARCHAR (500) , ");
-        sqlBuilder.append("FOI_VISUALIZADO                 INTEGER");
+        sqlBuilder.append("CREATE TABLE IF NOT EXISTS QUESTIONS (       ");
+        sqlBuilder.append("_id                                   INTEGER");
+        sqlBuilder.append("PRIMARY KEY                                , ");
+        sqlBuilder.append("QUESTION_HEADER               VARCHAR (50) , ");
+        sqlBuilder.append("QUESTION_TEXT               VARCHAR (1000) , ");
+        sqlBuilder.append("LEVEL                          VARCHAR (1) , ");
+        sqlBuilder.append("FOI_VISUALIZADO                      INTEGER" );
         sqlBuilder.append(");");
 
         return sqlBuilder.toString();
@@ -25,9 +27,12 @@ public class ScriptSQL {
         StringBuilder sqlBuilder = new StringBuilder();
 
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS SELECTED_QUESTIONS ( ");
-        sqlBuilder.append("_id                         INTEGER");
-        sqlBuilder.append("PRIMARY KEY                      , ");
-        sqlBuilder.append("QUESTION              VARCHAR (500)");
+        sqlBuilder.append("_id                                      INTEGER");
+        sqlBuilder.append("PRIMARY KEY                                   , ");
+        sqlBuilder.append("QUESTION_HEADER                  VARCHAR (50) , ");
+        sqlBuilder.append("QUESTION_TEXT                  VARCHAR (1000) , ");
+        sqlBuilder.append("LEVEL                             VARCHAR (1) , ");
+        sqlBuilder.append("FOI_VISUALIZADO                         INTEGER" );
         sqlBuilder.append(");");
 
         return sqlBuilder.toString();

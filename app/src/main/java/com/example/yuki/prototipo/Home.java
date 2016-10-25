@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.yuki.prototipo.sql.filter;
+
 public class Home extends AppCompatActivity {
 
     private Button btnEscolherQuestoes;
@@ -28,13 +30,15 @@ public class Home extends AppCompatActivity {
 
     public void chamarEscolherQuestoes(View view)
     {
-        Intent it = new Intent(this, MainActivity.class);
+        Intent it = new Intent(this, filter.class);
+        it.putExtra("BUTTON","Escolher");
         startActivityForResult(it, 0);
     }
 
     public void chamarVisualizarQuestoes(View view)
     {
-        Intent it = new Intent(this, SavedQuestions.class);
+        Intent it = new Intent(this, filter.class);
+        it.putExtra("BUTTON","Visualizar");
         startActivityForResult(it, 0);
     }
 

@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,7 +15,6 @@ import com.example.yuki.prototipo.sql.DataBase;
 import com.example.yuki.prototipo.sql.Question_Repository;
 import com.example.yuki.prototipo.sql.Selected_Questions;
 
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private Question_Repository repositorioDeQuestoes;
     private Selected_Questions saveQuestions;
     private Question question;
+    private char level = '-';
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,15 @@ public class MainActivity extends AppCompatActivity {
             //IMPROVISO!!!!
             this.buscarQuestoesDeFora();
 
-            this.question = this.repositorioDeQuestoes.catchNextQuestion();
+            Bundle bundle = getIntent().getExtras();
+
+            if ((bundle != null) && (bundle.containsKey("LEVEL")))
+            {
+                this.level = (char) bundle.getSerializable("LEVEL");
+                this.question = this.repositorioDeQuestoes.catchNextQuestion(Character.toString(this.level));
+            }
+            else
+                this.question = this.repositorioDeQuestoes.catchNextQuestion();
 
             if(this.question==null)
             {
@@ -61,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 this.repositorioDeQuestoes.updateFoiVisualizado();
             }
             else
-                txtQuestion.setText(this.question.getQuestion());
+                txtQuestion.setText(this.question.getQuestionHeader());
 
         }
         else
@@ -126,22 +132,23 @@ public class MainActivity extends AppCompatActivity {
     private void chamarMainActivity()
     {
         Intent it = new Intent(this, MainActivity.class);
+        if(this.level!='-')
+            it.putExtra("LEVEL",this.level);
         startActivityForResult(it, 0);
-        Log.i("Fechando programa","true");
         finish();
     }
 
     private void buscarQuestoesDeFora()
     {
 
-            Question q1 = new Question(1, "Teste 1.");
-            Question q2 = new Question(2, "Teste 2.");
-            Question q3 = new Question(3, "Teste 3.");
-            Question q4 = new Question(4, "Teste 4.");
-            Question q5 = new Question(5, "Teste 5.");
-            Question q6 = new Question(6, "Teste 6.");
-            Question q7 = new Question(7, "Teste 7.");
-            Question q8 = new Question(8, "Teste 8.");
+            Question q1 = new Question(1,"Question header 1","Question text 1",'E');
+            Question q2 = new Question(2,"Question header 2","Question text 2",'M');
+            Question q3 = new Question(3,"Question header 3","Question text 3",'H');
+            Question q4 = new Question(4,"Question header 4","Question text 4",'E');
+            Question q5 = new Question(5,"Question header 5","Question text 5",'M');
+            Question q6 = new Question(6,"Question header 6","Question text 6",'H');
+            Question q7 = new Question(7,"Question header 7","Question text 7",'E');
+            Question q8 = new Question(8,"Question header 8","Question text 8",'M');
 
             repositorioDeQuestoes.insert(this,q1);
             repositorioDeQuestoes.insert(this,q2);

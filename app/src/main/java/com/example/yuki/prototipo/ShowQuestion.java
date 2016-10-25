@@ -1,12 +1,14 @@
 package com.example.yuki.prototipo;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ public class ShowQuestion extends AppCompatActivity {
     private Question_Repository repositorioDeQuestoes;
     private Selected_Questions saveQuestions;
     private Question question;
+    private char level='-';
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,10 @@ public class ShowQuestion extends AppCompatActivity {
         if ((bundle != null) && (bundle.containsKey("QUESTION")))
             question = (Question) bundle.getSerializable("QUESTION");
 
-        txtShowQuestion.setText(question.getQuestion());
+        if ((bundle != null) && (bundle.containsKey("LEVEL")))
+            level = (char) bundle.getSerializable("LEVEL");
+
+        txtShowQuestion.setText(question.getQuestionText());
 
     }
 
@@ -69,6 +75,13 @@ public class ShowQuestion extends AppCompatActivity {
 
     public void buttonOk(View view)
     {
+        Intent it = new Intent(this, SavedQuestions.class);
+        if(this.level != '-')
+        {
+            Log.i("Passando level",""+this.level);
+            it.putExtra("LEVEL",this.level);
+        }
+        startActivityForResult(it,0);
         finish();
     }
 
@@ -83,6 +96,13 @@ public class ShowQuestion extends AppCompatActivity {
             saveQuestions = new Selected_Questions(conn);
             saveQuestions.delete(this.question.getId());
 
+            Intent it = new Intent(this, SavedQuestions.class);
+            if(this.level != '-')
+            {
+                Log.i("Passando level",""+this.level);
+                it.putExtra("LEVEL",this.level);
+            }
+            startActivityForResult(it,0);
             finish();
         }
         else

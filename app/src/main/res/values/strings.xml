@@ -18,4 +18,5 @@
     <string name="title_activity_home">Home</string>
     <string name="title_activity_saved_questions">SavedQuestions</string>
     <string name="title_activity_show_question">ShowQuestion</string>
+    <string name="title_activity_filter">Questões</string>
 </resources>

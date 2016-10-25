@@ -22,6 +22,7 @@ public class SavedQuestions extends AppCompatActivity implements AdapterView.OnI
     private ListView lstSavedQuestions;
     private Selected_Questions selectedQuestions;
     private ArrayAdapter<Question> adpQuestions;
+    private char level = '-';
 
     private DataBase dataBase;
     private SQLiteDatabase conn;
@@ -40,8 +41,16 @@ public class SavedQuestions extends AppCompatActivity implements AdapterView.OnI
         {
             selectedQuestions = new Selected_Questions(conn);
             adpQuestions = selectedQuestions.buscarQuestoesSelecionadas(this);
-            lstSavedQuestions.setAdapter(adpQuestions);
 
+            Bundle bundle = getIntent().getExtras();
+
+            if ((bundle != null) && (bundle.containsKey("LEVEL")))
+            {
+                level = (char) bundle.getSerializable("LEVEL");
+                adpQuestions = selectedQuestions.filterLevel(this,adpQuestions,Character.toString(this.level));
+            }
+
+            lstSavedQuestions.setAdapter(adpQuestions);
 
         }
         else
@@ -83,9 +92,10 @@ public class SavedQuestions extends AppCompatActivity implements AdapterView.OnI
 
         Intent it = new Intent(this, ShowQuestion.class);
         it.putExtra("QUESTION",question);
-
+        if(this.level!='-')
+            it.putExtra("LEVEL",this.level);
         startActivityForResult(it,0);
-
+        finish();
     }
 
 }

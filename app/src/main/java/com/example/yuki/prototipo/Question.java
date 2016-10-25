@@ -9,15 +9,19 @@ import java.io.Serializable;
 public class Question implements Serializable
 {
     private int id;
-    private  String question;
+    private  String questionHeader;
+    private  String questionText;
+    private String level;
     private int foiVisualizado;
 
     public Question(){}
 
-    public Question(int id, String question)
+    public Question(int id, String questionHeader, String questionText, char level)
     {
         this.setId(id);
-        this.setQuestion(question);
+        this.setQuestionHeader(questionHeader);
+        this.setQuestionText(questionText);
+        this.setLevel(level);
         this.setFoiVisualizado(0);
     }
 
@@ -29,12 +33,20 @@ public class Question implements Serializable
         this.id = id;
     }
 
-    public String getQuestion() {
-        return question;
+    public String getQuestionHeader() {
+        return questionHeader;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
+    public void setQuestionHeader(String questionHeader) {
+        this.questionHeader = questionHeader;
+    }
+
+    public String getQuestionText() {
+        return questionText;
+    }
+
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
     }
 
     public int getFoiVisualizado() {
@@ -45,11 +57,26 @@ public class Question implements Serializable
         this.foiVisualizado = foiVisualizado;
     }
 
+    public void setLevel(char level)
+    {
+        this.level = String.valueOf(level);
+    }
+
+    public void setLevel(String level)
+    {
+        this.level = level;
+    }
+
+    public String getLevel()
+    {
+        return level;
+    }
+
     public String toString()
     {
-        String ret="Questão ";
+        String ret="";
 
-        ret = ret+this.getId();
+        ret = ret+this.getQuestionHeader();
 
         return ret;
     }
