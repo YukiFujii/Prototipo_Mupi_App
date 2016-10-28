@@ -19,6 +19,7 @@ public class DataBase extends SQLiteOpenHelper implements Serializable
     {
         db.execSQL(ScriptSQL.getRepositorioDePerguntas());
         db.execSQL(ScriptSQL.getSelectedQuestions());
+        db.execSQL(ScriptSQL.getTagQuestion());
     }
 
     @Override

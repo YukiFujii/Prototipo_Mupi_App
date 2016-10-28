@@ -18,8 +18,27 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3"
+        android:layout_weight="1.8"
         android:id="@+id/linearCabecalho">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/txtQuestionHeader"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            android:background="#ffffff"
+            android:layout_weight="1.2"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/linearHeader"
+            android:layout_weight="3
+            ">
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -27,7 +46,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="1.2"
         android:id="@+id/linearCorpo"
         android:background="@color/material_grey_100">
 
@@ -40,9 +59,10 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/txtQuestion"
+                android:id="@+id/txtQuestionText"
+                android:background="#ffffff"
                 android:textColor="#000000"
                 android:textSize="20dp" />
         </LinearLayout>
@@ -53,7 +73,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2.5"
+        android:layout_weight="2"
         android:id="@+id/linearRodape">
 
         <Button

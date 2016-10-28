@@ -37,4 +37,17 @@ public class ScriptSQL {
 
         return sqlBuilder.toString();
     }
+
+    public static String getTagQuestion()
+    {
+        StringBuilder sqlBuilder = new StringBuilder();
+
+        sqlBuilder.append("CREATE TABLE IF NOT EXISTS TAG_QUESTIONS    ( ");
+        sqlBuilder.append("_id_QUESTION                        INTEGER , ");
+        //sqlBuilder.append("PRIMARY KEY                                 , ");
+        sqlBuilder.append("TAG                             VARCHAR (20)  ");
+        sqlBuilder.append(");");
+
+        return sqlBuilder.toString();
+    }
 }

@@ -49,7 +49,7 @@ public class filter extends AppCompatActivity implements AdapterView.OnItemSelec
             finish();
 
         adpLevel = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
-        adpLevel.add("------");
+        adpLevel.add("ALL");
         adpLevel.add("EASY");
         adpLevel.add("MEDIUM");
         adpLevel.add("HARD");
@@ -67,6 +67,11 @@ public class filter extends AppCompatActivity implements AdapterView.OnItemSelec
             Intent it = new Intent(this, MainActivity.class);
             if (this.level != '-')
                 it.putExtra("LEVEL", level);
+            if(!this.editTag.getText().toString().equals(""))
+            {
+                it.putExtra("TAG",this.editTag.getText().toString());
+                Log.i("Filtrando por tag",this.editTag.getText().toString());
+            }
             startActivityForResult(it, 0);
             finish();
         }
@@ -75,6 +80,11 @@ public class filter extends AppCompatActivity implements AdapterView.OnItemSelec
             Intent it = new Intent(this, SavedQuestions.class);
             if (this.level != '-')
                 it.putExtra("LEVEL", level);
+            if(!this.editTag.getText().toString().equals(""))
+            {
+                it.putExtra("TAG",this.editTag.getText().toString());
+                Log.i("Filtrando por tag",this.editTag.getText().toString());
+            }
             startActivityForResult(it, 0);
             finish();
         }

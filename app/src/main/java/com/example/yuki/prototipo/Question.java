@@ -1,6 +1,7 @@
 package com.example.yuki.prototipo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by yuki on 14/10/16.
@@ -12,6 +13,7 @@ public class Question implements Serializable
     private  String questionHeader;
     private  String questionText;
     private String level;
+    private ArrayList<String> tags;
     private int foiVisualizado;
 
     public Question(){}
@@ -23,6 +25,7 @@ public class Question implements Serializable
         this.setQuestionText(questionText);
         this.setLevel(level);
         this.setFoiVisualizado(0);
+        this.tags = new ArrayList<String>();
     }
 
     public int getId() {
@@ -81,4 +84,18 @@ public class Question implements Serializable
         return ret;
     }
 
+    public void addTag(String tag)
+    {
+        this.tags.add(tag);
+    }
+
+    public void addTag(ArrayList<String> arrayTag)
+    {
+        this.tags = arrayTag;
+    }
+
+    public ArrayList<String> getTags()
+    {
+        return this.tags;
+    }
 }
