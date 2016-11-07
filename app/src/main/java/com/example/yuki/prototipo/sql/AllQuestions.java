@@ -9,24 +9,24 @@ import com.example.yuki.prototipo.Question;
  * Created by yuki on 21/10/16.
  */
 
-public final class FacadeSQL {
+public final class AllQuestions {
 
     private static DataBase dataBase;
     private static SQLiteDatabase conn;
-    private static Question_Repository repositorioDeQuestoes;
-    private static Selected_Questions saveQuestions;
+    private static UnselectedQuestions unselectedQuestions;
+    private static SelectedQuestions selectedQuestions;
 
     public static boolean hasQuestion(Context context, Question question)
     {
-        if(conexaoBD(context))
+        if(connectionBD(context))
         {
-            repositorioDeQuestoes = new Question_Repository(conn);
-            saveQuestions = new Selected_Questions(conn);
+            unselectedQuestions = new UnselectedQuestions(conn);
+            selectedQuestions = new SelectedQuestions(conn);
 
-            if(repositorioDeQuestoes.hasQuestion(question))
+            if(unselectedQuestions.hasQuestion(question))
                 return true;
 
-            if(saveQuestions.hasQuestion(question))
+            if(selectedQuestions.hasQuestion(question))
                 return true;
 
             return false;
@@ -35,7 +35,7 @@ public final class FacadeSQL {
             return false;
     }
 
-    private static boolean conexaoBD(Context context)
+    private static boolean connectionBD(Context context)
     {
         try {
 

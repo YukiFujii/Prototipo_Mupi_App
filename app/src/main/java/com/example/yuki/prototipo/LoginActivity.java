@@ -8,7 +8,7 @@ import android.view.View;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private boolean flagAcesso = true;
+    private boolean flagAccess = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -17,9 +17,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
     }
 
-    public void chamarTelaInicial(View v)
+    public void callHome(View v)
     {
-        if(flagAcesso) {
+        if(flagAccess) {
             Intent it = new Intent(this, Home.class);
             startActivityForResult(it, 0);
             finish();

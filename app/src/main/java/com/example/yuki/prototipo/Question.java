@@ -14,7 +14,7 @@ public class Question implements Serializable
     private  String questionText;
     private String level;
     private ArrayList<String> tags;
-    private int foiVisualizado;
+    private int wasVisualized;
 
     public Question(){}
 
@@ -24,7 +24,7 @@ public class Question implements Serializable
         this.setQuestionHeader(questionHeader);
         this.setQuestionText(questionText);
         this.setLevel(level);
-        this.setFoiVisualizado(0);
+        this.setWasVisualized(0);
         this.tags = new ArrayList<String>();
     }
 
@@ -52,12 +52,12 @@ public class Question implements Serializable
         this.questionText = questionText;
     }
 
-    public int getFoiVisualizado() {
-        return foiVisualizado;
+    public int getWasVisualized() {
+        return wasVisualized;
     }
 
-    public void setFoiVisualizado(int foiVisualizado) {
-        this.foiVisualizado = foiVisualizado;
+    public void setWasVisualized(int wasVisualized) {
+        this.wasVisualized = wasVisualized;
     }
 
     public void setLevel(char level)

@@ -2,8 +2,6 @@ package com.example.yuki.prototipo.sql;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,19 +12,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.example.yuki.prototipo.MainActivity;
-import com.example.yuki.prototipo.Question;
+import com.example.yuki.prototipo.ScreenUnselectedQuestions;
 import com.example.yuki.prototipo.R;
-import com.example.yuki.prototipo.SavedQuestions;
-import com.example.yuki.prototipo.ShowQuestion;
+import com.example.yuki.prototipo.ScreenSelectedQuestions;
 
-public class filter extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class Filter extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private Spinner spnLevel;
     private EditText editTag;
-    private Button btnBuscar;
+    private Button btnSearch;
     private char level = '-';
-    private String chamadoPor;
+    private String calledBy;
 
     private ArrayAdapter<String> adpLevel;
 
@@ -39,12 +35,12 @@ public class filter extends AppCompatActivity implements AdapterView.OnItemSelec
 
         spnLevel = (Spinner)findViewById(R.id.spnLevel);
         editTag = (EditText)findViewById(R.id.editTag);
-        btnBuscar = (Button)findViewById(R.id.btnBuscar);
+        btnSearch = (Button)findViewById(R.id.btnBuscar);
 
         Bundle bundle = getIntent().getExtras();
 
         if ((bundle != null) && (bundle.containsKey("BUTTON")))
-            this.chamadoPor = (String) bundle.getSerializable("BUTTON");
+            this.calledBy = (String) bundle.getSerializable("BUTTON");
         else
             finish();
 
@@ -60,11 +56,11 @@ public class filter extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 
-    public void buttonBuscar(View view)
+    public void buttonSearch(View view)
     {
-        if(this.chamadoPor.equals("Escolher"))
+        if(this.calledBy.equals("Choose"))
         {
-            Intent it = new Intent(this, MainActivity.class);
+            Intent it = new Intent(this, ScreenUnselectedQuestions.class);
             if (this.level != '-')
                 it.putExtra("LEVEL", level);
             if(!this.editTag.getText().toString().equals(""))
@@ -77,14 +73,12 @@ public class filter extends AppCompatActivity implements AdapterView.OnItemSelec
         }
         else
         {
-            Intent it = new Intent(this, SavedQuestions.class);
+            Intent it = new Intent(this, ScreenSelectedQuestions.class);
             if (this.level != '-')
                 it.putExtra("LEVEL", level);
             if(!this.editTag.getText().toString().equals(""))
-            {
                 it.putExtra("TAG",this.editTag.getText().toString());
-                Log.i("Filtrando por tag",this.editTag.getText().toString());
-            }
+
             startActivityForResult(it, 0);
             finish();
         }

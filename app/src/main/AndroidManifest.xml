@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ScreenUnselectedQuestions"
             android:label="Questão"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -31,7 +31,7 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SavedQuestions"
+            android:name=".ScreenSelectedQuestions"
             android:label="@string/title_activity_saved_questions"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -39,7 +39,7 @@
             android:label="@string/title_activity_show_question"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".sql.filter"
+            android:name=".sql.Filter"
             android:label="@string/title_activity_filter"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

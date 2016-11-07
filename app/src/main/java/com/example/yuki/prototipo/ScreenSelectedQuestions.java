@@ -4,25 +4,27 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.yuki.prototipo.sql.DataBase;
-import com.example.yuki.prototipo.sql.Question_Repository;
-import com.example.yuki.prototipo.sql.Selected_Questions;
+import com.example.yuki.prototipo.sql.SelectedQuestions;
 
-public class SavedQuestions extends AppCompatActivity implements AdapterView.OnItemClickListener{
+import java.util.ArrayList;
+
+public class ScreenSelectedQuestions extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private ListView lstSavedQuestions;
-    private Selected_Questions selectedQuestions;
+    private SelectedQuestions selectedQuestions;
     private ArrayAdapter<Question> adpQuestions;
     private char level = '-';
+    private String tag = "";
+    private ArrayList<Integer> arrayQuestions;
 
     private DataBase dataBase;
     private SQLiteDatabase conn;
@@ -37,19 +39,43 @@ public class SavedQuestions extends AppCompatActivity implements AdapterView.OnI
         lstSavedQuestions = (ListView)findViewById(R.id.lstSavedQuestions);
         lstSavedQuestions.setOnItemClickListener(this);
 
-        if(this.conexaoBD())
+        if(this.connectionBD())
         {
-            selectedQuestions = new Selected_Questions(conn);
-            adpQuestions = selectedQuestions.buscarQuestoesSelecionadas(this);
+            selectedQuestions = new SelectedQuestions(conn);
 
             Bundle bundle = getIntent().getExtras();
 
-            if ((bundle != null) && (bundle.containsKey("LEVEL")))
+            if ((bundle != null) && (bundle.containsKey("LEVEL")) && (bundle.containsKey("TAG")))
             {
-                level = (char) bundle.getSerializable("LEVEL");
-                adpQuestions = selectedQuestions.filterLevel(this,adpQuestions,Character.toString(this.level));
+                Log.i("Entrou","LEVEL & TAG");
+                this.level = (char) bundle.getSerializable("LEVEL");
+                this.tag = (String) bundle.getSerializable("TAG");
+                this.arrayQuestions = this.selectedQuestions.catchArrayQuestionTagLevel(this.tag,Character.toString(this.level));
             }
 
+            else if ((bundle != null) && (bundle.containsKey("LEVEL")))
+            {
+                Log.i("Entrou","LEVEL");
+                this.level = (char) bundle.getSerializable("LEVEL");
+                this.arrayQuestions = this.selectedQuestions.catchArrayQuestionLevel(Character.toString(this.level));
+
+            }
+
+            else if ((bundle != null) && (bundle.containsKey("TAG")))
+            {
+                Log.i("Entrou","TAG");
+                this.tag = (String) bundle.getSerializable("TAG");
+                this.arrayQuestions = this.selectedQuestions.catchArrayQuestionTag(this.tag);
+
+            }
+
+            else
+            {
+                Log.i("Entrou","SEM FILTRO");
+                this.arrayQuestions = this.selectedQuestions.catchArrayQuestion();
+            }
+
+            adpQuestions = selectedQuestions.createArrayAdapterQuestion(this,this.arrayQuestions);
             lstSavedQuestions.setAdapter(adpQuestions);
 
         }
@@ -63,7 +89,7 @@ public class SavedQuestions extends AppCompatActivity implements AdapterView.OnI
 
     }
 
-    private boolean conexaoBD()
+    private boolean connectionBD()
     {
         try {
 
@@ -81,7 +107,7 @@ public class SavedQuestions extends AppCompatActivity implements AdapterView.OnI
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        adpQuestions = selectedQuestions.buscarQuestoesSelecionadas(this);
+        adpQuestions = selectedQuestions.searchSelectedQuestions(this);
         lstSavedQuestions.setAdapter(adpQuestions);
     }
 
@@ -91,9 +117,14 @@ public class SavedQuestions extends AppCompatActivity implements AdapterView.OnI
         Question question = adpQuestions.getItem(position);
 
         Intent it = new Intent(this, ShowQuestion.class);
-        it.putExtra("QUESTION",question);
+        it.putExtra("SELECTED_QUESTIONS",question);
+
         if(this.level!='-')
             it.putExtra("LEVEL",this.level);
+
+        if(this.tag!="")
+            it.putExtra("TAG",this.tag);
+
         startActivityForResult(it,0);
         finish();
     }

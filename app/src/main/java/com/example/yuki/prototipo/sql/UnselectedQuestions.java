@@ -14,16 +14,16 @@ import java.util.ArrayList;
  * Created by yuki on 14/10/16.
  */
 
-public class Question_Repository {
+public class UnselectedQuestions {
 
     private SQLiteDatabase conn;
 
-    public Question_Repository(SQLiteDatabase conn)
+    public UnselectedQuestions(SQLiteDatabase conn)
     {
         this.conn = conn;
     }
 
-    private ContentValues preencheContentValues(Question question)
+    private ContentValues fillContentValues(Question question)
     {
         ContentValues values = new ContentValues();
 
@@ -31,12 +31,12 @@ public class Question_Repository {
         values.put("QUESTION_HEADER",question.getQuestionHeader());
         values.put("QUESTION_TEXT",question.getQuestionText());
         values.put("LEVEL",question.getLevel());
-        values.put("FOI_VISUALIZADO",question.getFoiVisualizado());
+        values.put("WAS_VISUALIZED",question.getWasVisualized());
 
         return values;
     }
 
-    private ContentValues preencherTagQuestions(Question question,int posicao)
+    private ContentValues fillTagQuestions(Question question,int posicao)
     {
         ContentValues values = new ContentValues();
 
@@ -51,38 +51,38 @@ public class Question_Repository {
         Log.i("Inserindo questao","true");
         Log.i("Tem questao",""+this.hasQuestion(question));
 
-        if(!(FacadeSQL.hasQuestion(context,question)))
+        if(!(AllQuestions.hasQuestion(context,question)))
         {
-            conn.insertOrThrow("QUESTIONS", null, preencheContentValues(question));
+            conn.insertOrThrow("UNSELECTED_QUESTIONS", null, fillContentValues(question));
 
             for (int i=0;i<question.getTags().size();i++)
             {
                 Log.i("Inserindo Tag",question.getTags().get(i));
-                conn.insertOrThrow("TAG_QUESTIONS",null,preencherTagQuestions(question,i));
+                conn.insertOrThrow("TAG_QUESTIONS",null,fillTagQuestions(question,i));
             }
         }
     }
 
     public void insert(Question question)
     {
-            conn.insertOrThrow("QUESTIONS", null, preencheContentValues(question));
+            conn.insertOrThrow("UNSELECTED_QUESTIONS", null,fillContentValues(question));
     }
 
     public void update(Question question)
     {
-        conn.update("QUESTIONS",preencheContentValues(question),"_id = ?",new String[]{question.getId()+""});
+        conn.update("UNSELECTED_QUESTIONS",fillContentValues(question),"_id = ?",new String[]{question.getId()+""});
     }
 
     public void delete(int id)
     {
-        conn.delete("QUESTIONS","_id = ?",new String[]{""+id});
+        conn.delete("UNSELECTED_QUESTIONS","_id = ?",new String[]{""+id});
     }
 
     public Question catchQuestion(int id)
     {
         Question question = null;
 
-        Cursor cursor = conn.query("QUESTIONS",null,"_id = ?",new String[]{""+id},null,null,null);
+        Cursor cursor = conn.query("UNSELECTED_QUESTIONS",null,"_id = ?",new String[]{""+id},null,null,null);
 
         cursor.moveToFirst();
 
@@ -92,17 +92,17 @@ public class Question_Repository {
         {
             do
             {
-                int foiVisualizado = cursor.getInt(cursor.getColumnIndex("FOI_VISUALIZADO"));
+                int wasVisualized = cursor.getInt(cursor.getColumnIndex("WAS_VISUALIZED"));
 
                 // se foiVisualizado igual a 0 significa que questão não foi visualizada
-                if(foiVisualizado==0)
+                if(wasVisualized==0)
                 {
                     question = new Question();
                     question.setId(cursor.getInt(cursor.getColumnIndex("_id")));
                     question.setQuestionHeader(cursor.getString(cursor.getColumnIndex("QUESTION_HEADER")));
                     question.setQuestionText(cursor.getString(cursor.getColumnIndex("QUESTION_TEXT")));
                     question.setLevel(cursor.getString(cursor.getColumnIndex("LEVEL")));
-                    question.setFoiVisualizado(cursor.getInt(cursor.getColumnIndex("FOI_VISUALIZADO")));
+                    question.setWasVisualized(cursor.getInt(cursor.getColumnIndex("WAS_VISUALIZED")));
                     break;
                 }
 
@@ -118,7 +118,7 @@ public class Question_Repository {
     {
         ArrayList<Integer> ret = new ArrayList<Integer>();
 
-        Cursor cursor = conn.query("QUESTIONS",null,null,null,null,null,null);
+        Cursor cursor = conn.query("UNSELECTED_QUESTIONS",null,null,null,null,null,null);
 
         cursor.moveToFirst();
 
@@ -128,10 +128,10 @@ public class Question_Repository {
         {
             do
             {
-                int foiVisualizado = cursor.getInt(cursor.getColumnIndex("FOI_VISUALIZADO"));
+                int wasVisualized = cursor.getInt(cursor.getColumnIndex("WAS_VISUALIZED"));
 
                 // se foiVisualizado igual a 0 significa que questão não foi visualizada
-                if(foiVisualizado==0)
+                if(wasVisualized==0)
                     ret.add(cursor.getInt(cursor.getColumnIndex("_id")));
 
             }while (cursor.moveToNext());
@@ -160,25 +160,9 @@ public class Question_Repository {
             }while (cursor.moveToNext());
         }
 
+        ret = this.removeVisualized(ret);
 
-        for(int i=0;i<ret.size();i++)
-        {
-            Log.i("IDs que contem TAG",""+ret.get(i));
-        }
-
-        ret = this.removerVisualizados(ret);
-
-        for(int i=0;i<ret.size();i++)
-        {
-            Log.i("IDs nao visualizado",""+ret.get(i));
-        }
-
-        ret = this.selecionarPorNivel(ret,level);
-
-        for(int i=0;i<ret.size();i++)
-        {
-            Log.i("IDs com tag e level",""+ret.get(i));
-        }
+        ret = this.selectByLevel(ret,level);
 
         return ret;
     }
@@ -187,7 +171,7 @@ public class Question_Repository {
     {
         ArrayList<Integer> ret = new ArrayList<Integer>();
 
-        Cursor cursor = conn.query("QUESTIONS",null,null,null,null,null,null);
+        Cursor cursor = conn.query("UNSELECTED_QUESTIONS",null,null,null,null,null,null);
 
         cursor.moveToFirst();
 
@@ -197,10 +181,10 @@ public class Question_Repository {
         {
             do
             {
-                int foiVisualizado = cursor.getInt(cursor.getColumnIndex("FOI_VISUALIZADO"));
+                int wasVisualized = cursor.getInt(cursor.getColumnIndex("WAS_VISUALIZED"));
 
                 // se foiVisualizado igual a 0 significa que questão não foi visualizada
-                if(foiVisualizado==0)
+                if(wasVisualized==0)
                 {
                     Log.i("Level da questao",""+cursor.getString(cursor.getColumnIndex("LEVEL")));
                     if(cursor.getString(cursor.getColumnIndex("LEVEL")).equals(level))
@@ -233,17 +217,17 @@ public class Question_Repository {
             }while (cursor.moveToNext());
         }
 
-        return this.removerVisualizados(ret);
+        return this.removeVisualized(ret);
     }
 
-    private ArrayList<Integer> selecionarPorNivel(ArrayList<Integer> arrayIds,String level)
+    private ArrayList<Integer> selectByLevel(ArrayList<Integer> arrayIds,String level)
     {
         ArrayList<Integer> ret = new ArrayList<Integer>();
 
 
         for(int i=0;i < arrayIds.size();i++)
         {
-            Cursor cursor = conn.query("QUESTIONS", null, "_id = ?", new String[]{"" + arrayIds.get(i)}, null, null, null);
+            Cursor cursor = conn.query("UNSELECTED_QUESTIONS", null, "_id = ?", new String[]{"" + arrayIds.get(i)}, null, null, null);
 
             cursor.moveToFirst();
 
@@ -257,22 +241,22 @@ public class Question_Repository {
         return ret;
     }
 
-    private ArrayList<Integer> removerVisualizados(ArrayList<Integer> arrayIds)
+    private ArrayList<Integer> removeVisualized(ArrayList<Integer> arrayIds)
     {
         ArrayList<Integer> ret = new ArrayList<Integer>();
 
 
         for(int i=0;i < arrayIds.size();i++)
         {
-            Cursor cursor = conn.query("QUESTIONS", null, "_id = ?", new String[]{"" + arrayIds.get(i)}, null, null, null);
+            Cursor cursor = conn.query("UNSELECTED_QUESTIONS", null, "_id = ?", new String[]{"" + arrayIds.get(i)}, null, null, null);
 
             cursor.moveToFirst();
 
             if (cursor.getCount() > 0) {
-                int foiVisualizado = cursor.getInt(cursor.getColumnIndex("FOI_VISUALIZADO"));
+                int wasVisualized = cursor.getInt(cursor.getColumnIndex("WAS_VISUALIZED"));
 
                 // se foiVisualizado igual a 0 significa que questão não foi visualizada
-                if (foiVisualizado == 0)
+                if (wasVisualized == 0)
                     ret.add(cursor.getInt(cursor.getColumnIndex("_id")));
             }
         }
@@ -280,11 +264,11 @@ public class Question_Repository {
         return ret;
     }
 
-    public void updateFoiVisualizado ()
+    public void updateWasVisualized ()
     {
         Question question;
 
-        Cursor cursor = conn.query("QUESTIONS",null,null,null,null,null,null);
+        Cursor cursor = conn.query("UNSELECTED_QUESTIONS",null,null,null,null,null,null);
 
         cursor.moveToFirst();
 
@@ -297,7 +281,7 @@ public class Question_Repository {
                     question.setQuestionHeader(cursor.getString(cursor.getColumnIndex("QUESTION_HEADER")));
                     question.setQuestionText(cursor.getString(cursor.getColumnIndex("QUESTION_TEXT")));
                     question.setLevel(cursor.getString(cursor.getColumnIndex("LEVEL")));
-                    question.setFoiVisualizado(0);
+                    question.setWasVisualized(0);
 
                     this.update(question);
 
@@ -307,7 +291,7 @@ public class Question_Repository {
 
     public boolean hasQuestion(Question question)
     {
-        Cursor cursor = conn.query("QUESTIONS",null,null,null,null,null,null);
+        Cursor cursor = conn.query("UNSELECTED_QUESTIONS",null,null,null,null,null,null);
 
         cursor.moveToFirst();
 

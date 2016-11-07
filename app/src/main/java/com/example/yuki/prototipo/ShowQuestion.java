@@ -4,22 +4,15 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.yuki.prototipo.sql.DataBase;
-import com.example.yuki.prototipo.sql.FacadeSQL;
-import com.example.yuki.prototipo.sql.Question_Repository;
-import com.example.yuki.prototipo.sql.Selected_Questions;
-
-import org.json.JSONObject;
-import org.json.JSONStringer;
+import com.example.yuki.prototipo.sql.UnselectedQuestions;
+import com.example.yuki.prototipo.sql.SelectedQuestions;
 
 public class ShowQuestion extends AppCompatActivity {
 
@@ -29,10 +22,11 @@ public class ShowQuestion extends AppCompatActivity {
 
     private DataBase dataBase;
     private SQLiteDatabase conn;
-    private Question_Repository repositorioDeQuestoes;
-    private Selected_Questions saveQuestions;
+    private UnselectedQuestions unselectedQuestions;
+    private SelectedQuestions selectedQuestions;
     private Question question;
     private char level='-';
+    private String tag = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,28 +35,34 @@ public class ShowQuestion extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        btnOk = (Button)findViewById(R.id.btnOk);
-        btnDelete = (Button)findViewById(R.id.btnDelete);
-        txtShowQuestion = (TextView)findViewById(R.id.txtShowQuestion);
+        this.btnOk = (Button)findViewById(R.id.btnOk);
+        this.btnDelete = (Button)findViewById(R.id.btnDelete);
+        this.txtShowQuestion = (TextView)findViewById(R.id.txtShowQuestion);
 
         Bundle bundle = getIntent().getExtras();
 
-        if ((bundle != null) && (bundle.containsKey("QUESTION")))
-            question = (Question) bundle.getSerializable("QUESTION");
+        if ((bundle != null) && (bundle.containsKey("SELECTED_QUESTIONS")))
+            this.question = (Question) bundle.getSerializable("SELECTED_QUESTIONS");
+
+        if ((bundle != null) && (bundle.containsKey("UNSELECTED_QUESTIONS")))
+            this.question = (Question) bundle.getSerializable("UNSELECTED_QUESTIONS");
 
         if ((bundle != null) && (bundle.containsKey("LEVEL")))
-            level = (char) bundle.getSerializable("LEVEL");
+            this.level = (char) bundle.getSerializable("LEVEL");
 
-        txtShowQuestion.setText(question.getQuestionText());
+        if ((bundle != null) && (bundle.containsKey("TAG")))
+            this.tag = (String) bundle.getSerializable("TAG");
+
+        this.txtShowQuestion.setText(this.question.getQuestionText());
 
     }
 
-    private boolean conexaoBD()
+    private boolean connectionBD()
     {
         try {
 
-            dataBase = new DataBase(this);
-            conn = dataBase.getWritableDatabase();
+            this.dataBase = new DataBase(this);
+            this.conn = this.dataBase.getWritableDatabase();
 
             return true;
         }
@@ -73,37 +73,37 @@ public class ShowQuestion extends AppCompatActivity {
 
     }
 
-    public void buttonOk(View view)
+    private void callScreenSelectedQuestions()
     {
-        Intent it = new Intent(this, SavedQuestions.class);
+        Intent it = new Intent(this, ScreenSelectedQuestions.class);
+
         if(this.level != '-')
-        {
-            Log.i("Passando level",""+this.level);
             it.putExtra("LEVEL",this.level);
-        }
+
+        if(this.tag!= "")
+            it.putExtra("TAG",this.tag);
+
         startActivityForResult(it,0);
         finish();
+    }
+
+    public void buttonOk(View view)
+    {
+        this.callScreenSelectedQuestions();
     }
 
     public void buttonDelete(View view)
     {
 
-        if(this.conexaoBD())
+        if(this.connectionBD())
         {
-            repositorioDeQuestoes = new Question_Repository(conn);
-            repositorioDeQuestoes.insert(this,this.question);
+            this.unselectedQuestions = new UnselectedQuestions(conn);
+            this.unselectedQuestions.insert(this,this.question);
 
-            saveQuestions = new Selected_Questions(conn);
-            saveQuestions.delete(this.question.getId());
+            this.selectedQuestions = new SelectedQuestions(conn);
+            this.selectedQuestions.delete(this.question.getId());
 
-            Intent it = new Intent(this, SavedQuestions.class);
-            if(this.level != '-')
-            {
-                Log.i("Passando level",""+this.level);
-                it.putExtra("LEVEL",this.level);
-            }
-            startActivityForResult(it,0);
-            finish();
+            this.callScreenSelectedQuestions();
         }
         else
         {

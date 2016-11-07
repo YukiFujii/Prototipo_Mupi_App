@@ -10,13 +10,13 @@ public class ScriptSQL {
     {
         StringBuilder sqlBuilder = new StringBuilder();
 
-        sqlBuilder.append("CREATE TABLE IF NOT EXISTS QUESTIONS (       ");
+        sqlBuilder.append("CREATE TABLE IF NOT EXISTS UNSELECTED_QUESTIONS (       ");
         sqlBuilder.append("_id                                   INTEGER");
         sqlBuilder.append("PRIMARY KEY                                , ");
         sqlBuilder.append("QUESTION_HEADER               VARCHAR (50) , ");
         sqlBuilder.append("QUESTION_TEXT               VARCHAR (1000) , ");
         sqlBuilder.append("LEVEL                          VARCHAR (1) , ");
-        sqlBuilder.append("FOI_VISUALIZADO                      INTEGER" );
+        sqlBuilder.append("WAS_VISUALIZED                       INTEGER" );
         sqlBuilder.append(");");
 
         return sqlBuilder.toString();
@@ -32,7 +32,7 @@ public class ScriptSQL {
         sqlBuilder.append("QUESTION_HEADER                  VARCHAR (50) , ");
         sqlBuilder.append("QUESTION_TEXT                  VARCHAR (1000) , ");
         sqlBuilder.append("LEVEL                             VARCHAR (1) , ");
-        sqlBuilder.append("FOI_VISUALIZADO                         INTEGER" );
+        sqlBuilder.append("WAS_VISUALIZED                          INTEGER" );
         sqlBuilder.append(");");
 
         return sqlBuilder.toString();
@@ -44,7 +44,6 @@ public class ScriptSQL {
 
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS TAG_QUESTIONS    ( ");
         sqlBuilder.append("_id_QUESTION                        INTEGER , ");
-        //sqlBuilder.append("PRIMARY KEY                                 , ");
         sqlBuilder.append("TAG                             VARCHAR (20)  ");
         sqlBuilder.append(");");
 

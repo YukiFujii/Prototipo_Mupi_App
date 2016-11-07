@@ -2,14 +2,12 @@ package com.example.yuki.prototipo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.yuki.prototipo.sql.filter;
+import com.example.yuki.prototipo.sql.Filter;
 
 public class Home extends AppCompatActivity {
 
@@ -28,17 +26,17 @@ public class Home extends AppCompatActivity {
 
     }
 
-    public void chamarEscolherQuestoes(View view)
+    public void callUnselectedQuestions(View view)
     {
-        Intent it = new Intent(this, filter.class);
-        it.putExtra("BUTTON","Escolher");
+        Intent it = new Intent(this, Filter.class);
+        it.putExtra("BUTTON","Choose");
         startActivityForResult(it, 0);
     }
 
-    public void chamarVisualizarQuestoes(View view)
+    public void callselectedQuestions(View view)
     {
-        Intent it = new Intent(this, filter.class);
-        it.putExtra("BUTTON","Visualizar");
+        Intent it = new Intent(this, Filter.class);
+        it.putExtra("BUTTON","Visualize");
         startActivityForResult(it, 0);
     }
 

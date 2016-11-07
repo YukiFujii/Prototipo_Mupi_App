@@ -3,7 +3,6 @@ package com.example.yuki.prototipo;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,13 +12,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.yuki.prototipo.sql.DataBase;
-import com.example.yuki.prototipo.sql.Question_Repository;
-import com.example.yuki.prototipo.sql.Selected_Questions;
+import com.example.yuki.prototipo.sql.UnselectedQuestions;
+import com.example.yuki.prototipo.sql.SelectedQuestions;
 
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+public class ScreenUnselectedQuestions extends AppCompatActivity {
 
     private TextView txtQuestionText;
     private TextView txtQuestionHeader;
@@ -28,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     private DataBase dataBase;
     private SQLiteDatabase conn;
-    private Question_Repository repositorioDeQuestoes;
-    private Selected_Questions saveQuestions;
+    private UnselectedQuestions unselectedQuestions;
+    private SelectedQuestions selectedQuestions;
     private Question question;
     private char level = '-';
     private String tag = "";
@@ -47,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
         btnSave = (Button) findViewById(R.id.btnSave);
         btnDiscart = (Button) findViewById(R.id.btnDiscart);
 
-        if(this.conexaoBD())
+        if(this.connectionBD())
         {
-            repositorioDeQuestoes = new Question_Repository(conn);
+            this.unselectedQuestions = new UnselectedQuestions(conn);
 
             //IMPROVISO!!!!
             this.buscarQuestoesDeFora();
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("Entrou","LEVEL & TAG");
                 this.level = (char) bundle.getSerializable("LEVEL");
                 this.tag = (String) bundle.getSerializable("TAG");
-                this.arrayQuestions = this.repositorioDeQuestoes.catchArrayQuestionTagLevel(this.tag,Character.toString(this.level));
+                this.arrayQuestions = this.unselectedQuestions.catchArrayQuestionTagLevel(this.tag,Character.toString(this.level));
                 this.question = this.getQuestion(this.arrayQuestions);
             }
 
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 Log.i("Entrou","LEVEL");
                 this.level = (char) bundle.getSerializable("LEVEL");
-                this.arrayQuestions = this.repositorioDeQuestoes.catchArrayQuestionLevel(Character.toString(this.level));
+                this.arrayQuestions = this.unselectedQuestions.catchArrayQuestionLevel(Character.toString(this.level));
                 this.question = this.getQuestion(this.arrayQuestions);
             }
 
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 Log.i("Entrou","TAG");
                 this.tag = (String) bundle.getSerializable("TAG");
-                this.arrayQuestions = this.repositorioDeQuestoes.catchArrayQuestionTag(this.tag);
+                this.arrayQuestions = this.unselectedQuestions.catchArrayQuestionTag(this.tag);
 
                 this.question = this.getQuestion(this.arrayQuestions);
             }
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             else
             {
                 Log.i("Entrou","SEM FILTRO");
-                this.arrayQuestions = this.repositorioDeQuestoes.catchArrayQuestion();
+                this.arrayQuestions = this.unselectedQuestions.catchArrayQuestion();
                 this.question = this.getQuestion(this.arrayQuestions);
             }
 
@@ -94,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 txtQuestionHeader.setText("Todas questões foram visualizadas!");
                 btnDiscart.setEnabled(false);
                 btnSave.setEnabled(false);
-                //this.repositorioDeQuestoes.updateFoiVisualizado();
             }
             else
             {
@@ -117,21 +115,16 @@ public class MainActivity extends AppCompatActivity {
     {
         Question question = null;
 
-        for(int i=0;i<arrayQuestions.size();i++)
-        {
-            Log.i("IDS NO ARRAY",""+arrayQuestions.get(i));
-        }
-
         if(!arrayQuestions.isEmpty())
-            question = this.repositorioDeQuestoes.catchQuestion(this.arrayQuestions.get(0));
+            question = this.unselectedQuestions.catchQuestion(this.arrayQuestions.get(0));
 
         else
-            this.repositorioDeQuestoes.updateFoiVisualizado();
+            this.unselectedQuestions.updateWasVisualized();
 
         return question;
     }
 
-    private boolean conexaoBD()
+    private boolean connectionBD()
     {
         try {
 
@@ -150,39 +143,37 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveQuestion()
     {
-        this.saveQuestions = new Selected_Questions(conn);
+        this.selectedQuestions = new SelectedQuestions(conn);
 
-        this.saveQuestions.insert(this.question);
-        this.repositorioDeQuestoes.delete(this.question.getId());
-
-        Log.i("Deletando questao do ID",""+question.getId());
+        this.selectedQuestions.insert(this.question);
+        this.unselectedQuestions.delete(this.question.getId());
     }
 
     public void btnSave(View view)
     {
-        this.question.setFoiVisualizado(1);
+        this.question.setWasVisualized(1);
 
-        Log.i("setVisualizado",""+question.getFoiVisualizado());
+        Log.i("setVisualizado",""+question.getWasVisualized());
 
-        this.repositorioDeQuestoes.update(this.question);
+        this.unselectedQuestions.update(this.question);
 
         this.saveQuestion();
 
-        this.chamarMainActivity();
+        this.callScreenUnselectedQuestions();
     }
 
     public void btnDiscart(View view)
     {
-        this.question.setFoiVisualizado(1);
+        this.question.setWasVisualized(1);
 
-        this.repositorioDeQuestoes.update(this.question);
+        this.unselectedQuestions.update(this.question);
 
-        this.chamarMainActivity();
+        this.callScreenUnselectedQuestions();
     }
 
-    private void chamarMainActivity()
+    private void callScreenUnselectedQuestions()
     {
-        Intent it = new Intent(this, MainActivity.class);
+        Intent it = new Intent(this, ScreenUnselectedQuestions.class);
         if(this.level!='-')
             it.putExtra("LEVEL",this.level);
 
@@ -193,6 +184,8 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+
+    //======================== Improvisso Para Testes ======================================
     private void buscarQuestoesDeFora()
     {
 
@@ -218,14 +211,14 @@ public class MainActivity extends AppCompatActivity {
 
             q4.addTag(tagsQuestion4);
 
-            repositorioDeQuestoes.insert(this,q1);
-            repositorioDeQuestoes.insert(this,q2);
-            repositorioDeQuestoes.insert(this,q3);
-            repositorioDeQuestoes.insert(this,q4);
-            repositorioDeQuestoes.insert(this,q5);
-            repositorioDeQuestoes.insert(this,q6);
-            repositorioDeQuestoes.insert(this,q7);
-            repositorioDeQuestoes.insert(this,q8);
+            unselectedQuestions.insert(this,q1);
+            unselectedQuestions.insert(this,q2);
+            unselectedQuestions.insert(this,q3);
+            unselectedQuestions.insert(this,q4);
+            unselectedQuestions.insert(this,q5);
+            unselectedQuestions.insert(this,q6);
+            unselectedQuestions.insert(this,q7);
+            unselectedQuestions.insert(this,q8);
     }
 
 }
